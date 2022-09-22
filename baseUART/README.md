@@ -4,4 +4,4 @@ arduino mega "master" and arduino uno slave
 
 communication image
 
-[image](./baseUART.jpeg)
+![image](./baseUART.jpeg)
