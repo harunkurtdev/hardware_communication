@@ -1,14 +1,19 @@
 #include <Arduino.h>
 
+
+// #define DEBUG_RX
 #define Sensor1 1
 #define Sensor2 2
 
 #define START_FRAME         0xABCD     	// [-] Start frme definition for reliable serial communication
 
 
+//Serail communaction for arduino uno 
 #include <SoftwareSerial.h>
 SoftwareSerial CommandSerialCom(2,3);        // RX, TX
 
+
+//my packet for serialcommand
 typedef struct {
   uint16_t start;
   int16_t id;
@@ -72,9 +77,9 @@ void Receive()
             memcpy(&Feedback, &Command, sizeof(SerialCommand));
 
             // Print data to built-in Serial
-            Serial.print("1: ");   Serial.print(Feedback.data); Serial.print("\t");
-            Serial.print("1: ");   Serial.print(Feedback.data); Serial.print("\t");
-            Serial.print("2: ");   Serial.print(Feedback.data1);Serial.print("\t");
+            Serial.print("0: ");   Serial.print(Feedback.data); Serial.print("\t");
+            Serial.print("1: ");   Serial.print(Feedback.data1); Serial.print("\t");
+            Serial.print("2: ");   Serial.print(Feedback.data2);Serial.print("\t");
             Serial.print("3: ");   Serial.print(Feedback.data3);Serial.print("\t");
             Serial.print("4: ");   Serial.print(Feedback.data4);Serial.print("\t");
             Serial.print("5: ");   Serial.print(Feedback.data5);Serial.print("\t");
@@ -93,9 +98,9 @@ void Receive()
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(13,OUTPUT);
+  pinMode(13,OUTPUT); // for control motor and etc...
   Serial.begin(9600);
-  CommandSerialCom.begin(9600);
+  CommandSerialCom.begin(9600); //software serail
 }
 
 
@@ -104,6 +109,9 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
+
+  //if you send at master arduino mega you remove commit line 
+  //and change value other Command nanem 
   // Command.id=(uint16_t)1;
   // Command.data=(uint16_t)1;
   // Command.checksum=(uint16_t)Sensor1;
@@ -111,7 +119,7 @@ void loop() {
   // Serial.write((uint8_t *)&Command,sizeof(Command));Serial.println();
 
 
-  Receive();
+  Receive(); // recieve data for sensor or control from master and etc
 
   switch(Command.checksum){
     case Sensor1:
