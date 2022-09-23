@@ -15,12 +15,12 @@ void loop()
 {
   
   
-  pot= analogRead(potpin);
+  pot= analogRead(potpin); //read potantiometer
   
   Wire.beginTransmission(4); // transmit to device #4
   Wire.write("potantiometer is ");        // sends five bytes, with send loop
   
-  Wire.write((pot>>2));              // sends one byte  
+  Wire.write((pot>>2));              // sends one byte //shift right byte 
   //Wire.write(x);              // sends one byte  
   Wire.endTransmission();    // stop transmitting
   Serial.println((pot>>2)); // 2^8
