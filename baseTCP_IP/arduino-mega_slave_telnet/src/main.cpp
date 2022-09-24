@@ -74,10 +74,10 @@ void loop() {
       if (thisChar!='\0')
         s+=thisChar;
       // echo the bytes back to the client:
-      //server.write(thisChar);
+      server.write(thisChar);
       // echo the bytes to the server as well:
-      //Serial.write(thisChar);
+      Serial.write(thisChar);
     }
-    Serial.println(client.read());
+    //Serial.println(client.read());
   }
 }
