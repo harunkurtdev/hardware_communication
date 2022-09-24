@@ -43,7 +43,7 @@ int main(){
 	//write(serverSock,(char* )&s,sizeof(s));
     char bufferX[1024]={0};
     // char valread = read(serverSock, bufferX, strlen(bufferX));
-    std::cout<<recv(serverSock, bufferX, strlen(bufferX),0)<<bufferX<<"value geldi"<<endl;
+    std::cout<<recv(serverSock, bufferX, strlen(bufferX),0)<<"\t"<<bufferX<<"\t"<<"value geldi"<<endl;
     //	}
     
     close(serverSock);
