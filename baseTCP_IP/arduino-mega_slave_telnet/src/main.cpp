@@ -75,6 +75,7 @@ void loop() {
       //   s+='\n';
       // echo the bytes back to the client:
       server.write(thisChar);
+      client.write();
       // echo the bytes to the server as well:
       Serial.write(thisChar);
     }

@@ -38,13 +38,13 @@ int main(){
     cout<<"Connected to Server"<<endl;
     char buffer[1024]={'h','e','l','l','o','\0'};
     
-	//while (true){
+	// while (true){
 	write(serverSock,buffer,strlen(buffer));
 	//write(serverSock,(char* )&s,sizeof(s));
-    char bufferX[1024]={0};
+    // char bufferX[1024]={0};
     // char valread = read(serverSock, bufferX, strlen(bufferX));
     std::cout<<recv(serverSock, bufferX, strlen(bufferX),0)<<"\t"<<bufferX<<"\t"<<"value geldi"<<endl;
-    //	}
+    // }
     
     close(serverSock);
 
