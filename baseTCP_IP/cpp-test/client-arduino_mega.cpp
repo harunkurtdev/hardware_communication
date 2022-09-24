@@ -40,11 +40,21 @@ int main(){
     
 	// while (true){
 	write(serverSock,buffer,strlen(buffer));
-	//write(serverSock,(char* )&s,sizeof(s));
+
+    int ret;
     char bufferX[1024]={0};
-    char valread = read(serverSock, bufferX, strlen(bufferX));
-    std::cout<<valread<<"\t"<<"value geldi"<<endl;
-    std::cout<<recv(serverSock, bufferX, strlen(bufferX),0)<<"\t"<<bufferX<<"\t"<<"value geldi"<<endl;
+    
+    // while ((ret = read(serverSock, bufferX, sizeof(bufferX)-1)) > 0) {
+    // //   bufferX[ret] = 0x00;
+    //   std::cout<<"\t"<<bufferX<<"\t"<<"value geldi"<<endl;
+    // //  printf("block read: \n<%s>\n", buf);
+    // }
+    read(serverSock, bufferX, sizeof(bufferX)-1);
+    std::cout<<"\t"<<bufferX<<"\t"<<"value geldi"<<endl;
+    //char valread = read(serverSock, bufferX, strlen(bufferX));
+    //int buf=recv(serverSock, bufferX, strlen(bufferX),0);
+    // std::cout<<valread<<"\t"<<"value geldi"<<endl;
+    
     // }
     
     close(serverSock);
