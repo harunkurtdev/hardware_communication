@@ -78,7 +78,7 @@ void loop() {
       // echo the bytes to the server as well:
       Serial.write(thisChar);
     }
-    alreadyConnected = true;
+    alreadyConnected = false;
     //Serial.println(client.read());
   }
 }
