@@ -71,13 +71,14 @@ void loop() {
     if (client.available() > 0) {
       // read the bytes incoming from the client:
       char thisChar = client.read();
-      if (thisChar!='\0')
-        s+=thisChar;
+      if (thisChar=='\0')
+        s+='\n';
       // echo the bytes back to the client:
       server.write(thisChar);
       // echo the bytes to the server as well:
       Serial.write(thisChar);
     }
+    alreadyConnected = true;
     //Serial.println(client.read());
   }
 }

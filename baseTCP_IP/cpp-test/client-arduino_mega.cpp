@@ -41,10 +41,10 @@ int main(){
 	//while (true){
 	write(serverSock,buffer,strlen(buffer));
 	//write(serverSock,(char* )&s,sizeof(s));
-   char bufferX[1024]={0};
+    char bufferX[1024]={0};
     // char valread = read(serverSock, bufferX, strlen(bufferX));
-    std::cout<<read(serverSock, bufferX, strlen(bufferX))<<"value geldi"<<endl;
-//	}
+    std::cout<<recv(serverSock, bufferX, strlen(bufferX),0)<<bufferX<<"value geldi"<<endl;
+    //	}
     
     close(serverSock);
 
