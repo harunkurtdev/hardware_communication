@@ -74,12 +74,12 @@ void loop() {
       // if (thisChar=='\0')
       //   s+='\n';
       // echo the bytes back to the client:
-      server.write(thisChar);
-      client.write();
+      server.write("thisChar");
+      client.write("thisChar");
       // echo the bytes to the server as well:
       Serial.write(thisChar);
     }
-    alreadyConnected = false;
+    // alreadyConnected = false;
     //Serial.println(client.read());
   }
 }

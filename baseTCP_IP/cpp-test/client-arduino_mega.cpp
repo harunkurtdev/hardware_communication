@@ -36,13 +36,14 @@ int main(){
     connect(serverSock,(struct sockaddr *)&addr,sizeof(addr));
 
     cout<<"Connected to Server"<<endl;
-    char buffer[1024]={'h','e','l','l','o','\0'};
+    char buffer[1024]={'h','e','l','l','o'};
     
 	// while (true){
 	write(serverSock,buffer,strlen(buffer));
 	//write(serverSock,(char* )&s,sizeof(s));
-    // char bufferX[1024]={0};
-    // char valread = read(serverSock, bufferX, strlen(bufferX));
+    char bufferX[1024]={0};
+    char valread = read(serverSock, bufferX, strlen(bufferX));
+    std::cout<<valread<<"\t"<<"value geldi"<<endl;
     std::cout<<recv(serverSock, bufferX, strlen(bufferX),0)<<"\t"<<bufferX<<"\t"<<"value geldi"<<endl;
     // }
     
