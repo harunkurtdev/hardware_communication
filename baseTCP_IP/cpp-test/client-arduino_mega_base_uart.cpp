@@ -17,8 +17,10 @@ using namespace std;
 
 
 #define START_FRAME         0xABCD     	// [-] Start frme definition for reliable serial communication
+#define START_FRAME         0xABCDE    	// [-] Start frme definition for reliable serial communication
 
 #define Sensor1 1
+#define Sensor2 1
 
 typedef struct {
   uint16_t start;
@@ -34,8 +36,19 @@ typedef struct {
   uint16_t checksum;
 }SerialCommand;
 
+
+
+typedef struct {
+  uint16_t start;
+  int16_t id;
+  int16_t data;
+  int16_t data1;
+uint16_t checksum;
+}SerialCommandUno;
+
 SerialCommand Command;
-SerialCommand CommandServer;
+// SerialCommand CommandServer;
+SerialCommandUno CommandServer;
 
 int main(){
 
@@ -82,7 +95,9 @@ int main(){
     Command.data=(int16_t)sendData;
 	write(serverSock,(uint8_t *)&Command,sizeof(Command));
     // close(serverSock);
-
+    read(serverSock, (uint8_t *)&CommandServer,sizeof(CommandServer));
+    cout<<CommandServer.data<<"\t"<<CommandServer.data1<<endl;
+    
     }
     // while ((ret = read(serverSock, bufferX, sizeof(bufferX)-1)) > 0) {
     // //   bufferX[ret] = 0x00;
