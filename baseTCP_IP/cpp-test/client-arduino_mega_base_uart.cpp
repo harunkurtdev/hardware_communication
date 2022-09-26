@@ -17,7 +17,7 @@ using namespace std;
 
 
 #define START_FRAME         0xABCD     	// [-] Start frme definition for reliable serial communication
-#define START_FRAME         0xABCDE    	// [-] Start frme definition for reliable serial communication
+#define START_FRAMEUno         0xABCDE    	// [-] Start frme definition for reliable serial communication
 
 #define Sensor1 1
 #define Sensor2 1
@@ -88,15 +88,15 @@ int main(){
     int sendData{0};
 	while (true){
     cout<< "send data for arduino uno : "<<endl;
-    cin>>sendData;
+    // cin>>sendData;
 
-    cout<< "send data for arduino uno at Sensor 2 : "<<endl;
-    cin>>sendData;
-    Command.data=(int16_t)sendData;
+    // cout<< "send data for arduino uno at Sensor 2 : "<<endl;
+    // cin>>sendData;
+    Command.data=(int16_t)1;
 	write(serverSock,(uint8_t *)&Command,sizeof(Command));
     // close(serverSock);
-    read(serverSock, (uint8_t *)&CommandServer,sizeof(CommandServer));
-    cout<<CommandServer.data<<"\t"<<CommandServer.data1<<endl;
+    // read(serverSock, (uint8_t *)&CommandServer,sizeof(CommandServer));
+    // cout<<CommandServer.data<<"\t"<<CommandServer.data1<<endl;
     
     }
     // while ((ret = read(serverSock, bufferX, sizeof(bufferX)-1)) > 0) {

@@ -128,10 +128,11 @@ void loop() {
         alreadyConnected = true;
       }
     RecieveTCP(&client);
-    client.write((uint8_t *)&FeedbackUno,sizeof(FeedbackUno));
     SendUno();
+    // client.write((uint8_t *)&FeedbackUno,sizeof(FeedbackUno));
+
   }else {
-    RecieveUno();
+    // RecieveUno();
   }
 
   // Serial1.write((uint8_t *)&Command,sizeof(Command));  
