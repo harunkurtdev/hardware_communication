@@ -35,6 +35,7 @@ typedef struct {
 }SerialCommand;
 
 SerialCommand Command;
+SerialCommand CommandServer;
 
 int main(){
 
@@ -55,14 +56,13 @@ int main(){
     addr.sin_family = AF_INET;
     addr.sin_port = htons(23);
 
-    connect(serverSock,(struct sockaddr *)&addr,sizeof(addr));
-
+    
     cout<<"Connected to Server"<<endl;
     
 
     Command.start=(uint16_t)START_FRAME;
     Command.id=(int16_t)1;
-    Command.data=(int16_t)2;
+    
     Command.data1=(int16_t)11;
     Command.data2=(int16_t)2;
     Command.data3=(int16_t)3;
@@ -71,10 +71,19 @@ int main(){
     Command.data6=(int16_t)6;
     Command.data7=(int16_t)7;
     Command.checksum=(uint16_t)Sensor1;
+    connect(serverSock,(struct sockaddr *)&addr,sizeof(addr));
+    int sendData{0};
+	while (true){
+    cout<< "send data for arduino uno : "<<endl;
+    cin>>sendData;
 
-	// while (true){
+    cout<< "send data for arduino uno at Sensor 2 : "<<endl;
+    cin>>sendData;
+    Command.data=(int16_t)sendData;
 	write(serverSock,(uint8_t *)&Command,sizeof(Command));
+    // close(serverSock);
 
+    }
     // while ((ret = read(serverSock, bufferX, sizeof(bufferX)-1)) > 0) {
     // //   bufferX[ret] = 0x00;
     //   std::cout<<"\t"<<bufferX<<"\t"<<"value geldi"<<endl;
@@ -82,7 +91,8 @@ int main(){
     // }
 
     // read(serverSock, (char *)&ptrChar, sizeof(ptrChar)-1);
-    std::cout<<"\t"<<bufferX<<"\t"<<"value geldi"<<endl;
+    // read(serverSock, (uint8_t *)&CommandServer,sizeof(CommandServer));
+    // std::cout<<"\t"<<(uint8_t *)&CommandServer.data1<<"\t"<<"value geldi"<<endl;
     
     //char valread = read(serverSock, bufferX, strlen(bufferX));
     //int buf=recv(serverSock, bufferX, strlen(bufferX),0);

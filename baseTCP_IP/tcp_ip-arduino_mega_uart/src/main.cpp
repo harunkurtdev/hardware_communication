@@ -15,9 +15,12 @@ IPAddress subnet(255, 255, 0, 0);
 
 
 #define START_FRAME         0xABCD     	// [-] Start frme definition for reliable serial communication
+#define START_FRAMEUno         0xABCDE     	// [-] Start frme definition for reliable serial communication
 
 #define Sensor1 1
+#define Sensor2 2
 
+//write for arduino uno
 typedef struct {
   uint16_t start;
   int16_t id;
@@ -32,8 +35,21 @@ typedef struct {
   uint16_t checksum;
 }SerialCommand;
 
+// read for arduino uno
+typedef struct {
+  uint16_t start;
+  int16_t id;
+  int16_t data;
+  int16_t data1;
+  uint16_t checksum;
+}SerialCommandUno;
+
+
 SerialCommand Command;
 SerialCommand Feedback;
+
+SerialCommandUno CommandUno;
+SerialCommandUno FeedbackUno;
 
 uint8_t idx = 0;                        // Index for new data pointer
 uint16_t bufStartFrame;                 // Buffer Start Frame
@@ -41,10 +57,23 @@ byte *p;                                // Pointer declaration for the new recei
 byte incomingByte;
 byte incomingBytePrev;
 
+uint8_t idxuno = 0;                        // Index for new data pointer
+uint16_t bufStartFrameuno;                 // Buffer Start Frame
+byte *puno;                                // Pointer declaration for the new received data
+byte incomingByteuno;
+byte incomingBytePrevuno;
+
 
 // telnet defaults to port 23
 EthernetServer server(23);
 bool alreadyConnected = false; // whether or not the client was connected previously
+
+// SerialCommandUno* RecieveUno();
+// SerialCommand* RecieveTCP();
+
+void RecieveUno();
+void SendUno();
+void RecieveTCP(EthernetClient* client);
 
 void setup() {
   // You can use Ethernet.init(pin) to configure the CS pin
@@ -87,46 +116,87 @@ void setup() {
 
 void loop() {
   // wait for a new client:
-  EthernetClient client = server.available();
-  String s;
-  // when the client sends the first byte, say hello:
-   Command.start=(uint16_t)START_FRAME;
-    Command.id=(int16_t)1;
-    Command.data=(int16_t)2;
-    Command.data1=(int16_t)11;
-    Command.data2=(int16_t)2;
-    Command.data3=(int16_t)3;
-    Command.data4=(int16_t)4;
-    Command.data5=(int16_t)5;
-    Command.data6=(int16_t)6;
-    Command.data7=(int16_t)7;
-    Command.checksum=(uint16_t)Sensor1;
+  
+  if(server.available()>0){
+    EthernetClient client = server.available();
+    if (client) {
+      if (!alreadyConnected) {
+        // clear out the input buffer:
+        client.flush();
+        Serial.println("We have a new client");
+        client.println("Hello, client!");
+        alreadyConnected = true;
+      }
 
-     
-  if (client) {
-    if (!alreadyConnected) {
-      // clear out the input buffer:
-      client.flush();
-      Serial.println("We have a new client");
-      client.println("Hello, client!");
-      alreadyConnected = true;
+    RecieveTCP(&client);
+    SendUno();
+  }else {
+    RecieveUno();
+  }
+
+  // Serial1.write((uint8_t *)&Command,sizeof(Command));  
+
+    // client.write((uint8_t *)&Command,sizeof(Command));
+
+    // alreadyConnected = false;
+    // Serial.println(s);
+  }
+}
+
+void SendUno(){
+  // Feedback.checksum=(uint16_t)Sensor2;
+  // Feedback.checksum=(uint16_t)START_FRAMEUno;
+  Serial1.write((uint8_t *)&Feedback,sizeof(Feedback));  
+}
+
+void RecieveUno(){
+  
+  if (Serial1.available()>0) {
+        incomingByteuno 	  = Serial1.read();                                   // Read the incoming byte
+        // Serial.println(incomingByte);
+        bufStartFrameuno	= ((uint16_t)(incomingByte) << 8) | incomingBytePrev;       // Construct the start frame
+    }
+    else {
+        return;
+    }
+    
+    // Copy received data
+    if (bufStartFrameuno == START_FRAMEUno) {	                    // Initialize if new data is detected
+        puno       = (byte *)&CommandUno;
+        *puno++    = incomingBytePrevuno;
+        *puno++    = incomingByteuno;
+        idxuno     = 2;	
+    } else if (idxuno >= 2 && idxuno < sizeof(SerialCommandUno)) {  // Save the new received data
+        *puno++    = incomingByteuno; 
+        idxuno++;
+    }	
+
+    if (idxuno == sizeof(SerialCommandUno)) {
+        uint16_t checksumuno;
+        checksumuno = (uint16_t)Sensor2;
+        // Check validity of the new data
+        if (CommandUno.start == START_FRAMEUno && checksumuno == CommandUno.checksum) {
+            // Copy the new data
+            memcpy(&FeedbackUno, &CommandUno, sizeof(SerialCommandUno));
+
+            // Print data to built-in Serial
+            Serial.print("0: ");   Serial.print(FeedbackUno.data); Serial.print("\t");
+            Serial.print("1: ");   Serial.print(FeedbackUno.data1); Serial.println();
+            } else {
+          Serial.println("Non-valid data skipped");
+        }
+        idx = 0;    // Reset the index (it prevents to enter in this if condition in the next cycle)
     }
 
-    // if (client.available() > 0) {
-    //   // read the bytes incoming from the client:
-    //   char thisChar = client.read();
-    //   if (thisChar=='\0')
-    //     s+='\n';
-    //   // echo the bytes back to the client:
-    //   //server.write(thisChar);
-    //   client.write("thisChar");
-    //   // echo the bytes to the server as well:
-    //   Serial.write(thisChar);
-    // }
+    // Update previous states
+    incomingBytePrev = incomingByte;
 
-    if (client.available()>0) {
-        incomingByte 	  = client.read();                                   // Read the incoming byte
-        Serial.println(incomingByte);
+}
+
+void RecieveTCP(EthernetClient* client){
+    if (client->available()>0) {
+        incomingByte 	  = client->read();                                   // Read the incoming byte
+        // Serial.println(incomingByte);
         bufStartFrame	= ((uint16_t)(incomingByte) << 8) | incomingBytePrev;       // Construct the start frame
     }
     else {
@@ -143,7 +213,7 @@ void loop() {
         *p++    = incomingByte; 
         idx++;
     }	
-
+    // Serial.println(idx++);
     if (idx == sizeof(SerialCommand)) {
         uint16_t checksum;
         checksum = (uint16_t)Sensor1;
@@ -160,6 +230,7 @@ void loop() {
             Serial.print("4: ");   Serial.print(Feedback.data4);Serial.print("\t");
             Serial.print("5: ");   Serial.print(Feedback.data5);Serial.print("\t");
             Serial.print("6: ");   Serial.print(Feedback.data6);
+            Serial1.write((uint8_t *)&Command,sizeof(Command));
             Serial.println();
             } else {
           Serial.println("Non-valid data skipped");
@@ -169,10 +240,5 @@ void loop() {
 
     // Update previous states
     incomingBytePrev = incomingByte;
-    
-    // Serial1.write((uint8_t *)&Command,sizeof(Command));Serial.println();
-    
-    // alreadyConnected = false;
-    // Serial.println(s);
-  }
+
 }
