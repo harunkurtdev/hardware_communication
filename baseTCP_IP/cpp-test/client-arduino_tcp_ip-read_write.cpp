@@ -169,7 +169,7 @@ int main(){
     Command.data=(int16_t)1;
 	  write(serverSock,(uint8_t *)&Command,sizeof(SerialCommand));
 int i = 0, r = 0;
-    while ((r = read(serverSock, (uint8_t *)&c, 1)) > 0 && i++ < 1024){
+    while ((r = ::read(serverSock, (uint8_t *)&c, 1)) > 0 && i++ < 1024){
       // std::cout<<"relax"<<std::endl;
       std::cout<<i<<std::endl;
             RecieveTCP(c);
