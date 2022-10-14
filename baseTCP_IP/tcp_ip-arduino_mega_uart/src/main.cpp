@@ -245,6 +245,7 @@ void RecieveTCP(EthernetClient* client){
 
 void SendTCP(EthernetClient* client)
 {
-
+    client->write((uint8_t *)&FeedbackUno,sizeof(FeedbackUno));
+   
 
 }
