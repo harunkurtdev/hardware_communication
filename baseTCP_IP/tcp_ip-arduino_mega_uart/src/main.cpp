@@ -74,6 +74,7 @@ bool alreadyConnected = false; // whether or not the client was connected previo
 void RecieveUno();
 void SendUno();
 void RecieveTCP(EthernetClient* client);
+void SendTCP(EthernetClient* client);
 
 void setup() {
   // You can use Ethernet.init(pin) to configure the CS pin
@@ -239,5 +240,11 @@ void RecieveTCP(EthernetClient* client){
 
     // Update previous states
     incomingBytePrev = incomingByte;
+
+}
+
+void SendTCP(EthernetClient* client)
+{
+
 
 }
