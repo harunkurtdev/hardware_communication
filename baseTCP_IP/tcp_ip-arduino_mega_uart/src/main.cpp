@@ -129,7 +129,20 @@ void loop() {
         alreadyConnected = true;
       }
     RecieveTCP(&client);
-    SendUno();
+    //SendUno();
+ Command.start=(uint16_t)START_FRAME;
+      Command.id=(int16_t)1;
+      Command.data=(int16_t)1;
+      Command.data1=(int16_t)11;
+      Command.data2=(int16_t)2;
+      Command.data3=(int16_t)3;
+      Command.data4=(int16_t)4;
+      Command.data5=(int16_t)5;
+      Command.data6=(int16_t)6;
+      Command.data7=(int16_t)7;
+      Command.checksum=(uint16_t)Sensor1;
+
+    SendTCP(&client);
     // client.write((uint8_t *)&FeedbackUno,sizeof(FeedbackUno));
 
   }else {
@@ -245,7 +258,7 @@ void RecieveTCP(EthernetClient* client){
 
 void SendTCP(EthernetClient* client)
 {
-    client->write((uint8_t *)&FeedbackUno,sizeof(FeedbackUno));
+    client->write((uint8_t *)&Command,sizeof(Command));
    
 
 }
