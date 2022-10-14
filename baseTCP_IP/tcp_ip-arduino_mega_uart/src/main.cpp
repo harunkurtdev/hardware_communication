@@ -8,7 +8,7 @@
 // gateway and subnet are optional:
 byte mac[] = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-IPAddress ip(192, 168, 1, 177);
+IPAddress ip(192, 168, 31, 177);
 IPAddress myDns(192, 168, 1, 1);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 0, 0);
@@ -128,7 +128,7 @@ void loop() {
         client.println("Hello, client!");
         alreadyConnected = true;
       }
-    RecieveTCP(&client);
+    //RecieveTCP(&client);
     //SendUno();
  Command.start=(uint16_t)START_FRAME;
       Command.id=(int16_t)1;
@@ -258,7 +258,7 @@ void RecieveTCP(EthernetClient* client){
 
 void SendTCP(EthernetClient* client)
 {
-    client->write((uint8_t *)&Command,sizeof(Command));
-   
+    client->write((uint8_t *)&Command,sizeof(SerialCommand));
+     Serial.println("veri yollandi");
 
 }
